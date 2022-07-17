@@ -2,12 +2,19 @@
 ## Introduction
 The following documentation will detail the various steps to setup a Nginx Web Server, complete with a Web Application Firewall (WAF) using ModSecurity and the OWASP CRS Rule Sets. All of which is compiled documentation from nginx.org official documentation in an easier more concise format. Links to the official documentation can be found in "Resources" at the bottom.
 
-*Note: All parts of this documentation will be done using Ubuntu 20.04. Adjust as needed according to needs and system preferences.*
+*Note: All parts of this documentation will be done using Ubuntu 20.04. Adjust as needed according to your needs and system preferences.*
  
 ## Part 1 – Setup Nginx with ModSecurity WAF
 ### Part 1a – Download Nginx and Necessary Packages
 
-First and foremost, don’t use the default apt repository provided by Ubuntu for Nginx, it is several versions behind the mainline release line. Instead you can either a) download the source code directly from Nginx’s official website, or b) you can update the repository for the Nginx package. For sake of this documentation we will be using Nginx version 1.20.2
+First and foremost, don’t use the default apt repository provided by Ubuntu for Nginx, it is several versions behind the mainline and stable releases. Instead you can either:
+
+- a) download the source code directly from Nginx’s official website, or 
+- b) you can update the repository for the Nginx package. 
+
+In either case, you will need to download the Nginx source code for integrating the ModSecurity module. 
+
+*Note: For sake of this documentation we will be using the mainline Nginx release version 1.20.2*
 
 *Note: you need at least Nginx 1.11.5 in order to use ModSecurity.*
 
@@ -16,7 +23,7 @@ For option a) run the following:
 > `wget http://nginx.org/download/nginx-1.20.2.tar.gz`
 > <br> `tar zxvf nginx-1.20.2.tar.gz`
 
-For option b) run the following to install the prerequisites and download the nginx signing key:  
+For option b) run the following to install the prerequisite packages and download the nginx signing key:  
 
 > `sudo apt install curl gnupg2 ca-certificates lsb-release ubuntu-keyring`
 > <br> `curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \`
@@ -73,7 +80,7 @@ You may see a bunch of errors messages, don’t worry about it as long as the ov
 
 ### Part 1c – Download and Configure the Nginx Connector for ModSecurity
 
-For the next part we are going to download the connector of sorts that will be used by Nginx to connect the ModSecurity Module to Nginx.
+For the next part we are going to download the connector of sorts that will be used by Nginx to connect the ModSecurity module.
 
 > `git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git`
 
@@ -93,17 +100,19 @@ Open the Nginx configuration file located in /etc/nginx/nginx.conf using your pr
 
 ### Part 1e – Configure and Enable ModSecurity WAF
 
-In this part we are going to create a new directory, modsec, within our default Nginx configuration directory for our ModSecurity configuration files. We will be using the recommended configuration directly for the creators of ModSecurity (SpiderLabs).
+In this part we are going to create a new directory, *modsec*, within our default Nginx configuration directory for our ModSecurity configuration files. We will be using the recommended configuration directly from the creators of ModSecurity (SpiderLabs) as a starting point. Feel free to, and please do, adjust these according to your system needs and preferences.
 
 > `mkdir /etc/nginx/modsec`
 > <br> `wget -P /etc/nginx/modsec/ https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/modsecurity.conf-recommended`
 > <br> `mv /etc/nginx/modsec/modsecurity.conf-recommended /etc/nginx/modsec/modsecurity.conf`
 
-Occasionally there is an error where the unicode.mapping file isn’t copied correctly, if this happens go to the GitHub repo and download it (should be in the master branch). And then simply run the following command to put it in the correct place:
+Occasionally there is an error where the unicode.mapping file isn’t copied correctly, if this happens it should be included by ModSecurity in the file you downloaded, if not go to the GitHub repo and download it (should be in the master branch). And then simply run the following command to put it in the correct place:
 
 > `cp ModSecurity/unicode.mapping /etc/nginx/modsec`
 
-While we are still in the configuring stage, we need to ensure that ModSecurity is in ‘detection-mode’ only, otherwise it will drop traffic (which can pose problems during the configuration stage). **MAKE SURE TO CHANGE THIS LATER.**
+While we are still in the configuring stage, we need to ensure that ModSecurity is in ‘detection-mode’ only, otherwise it will drop traffic (which can pose problems during the configuration stage). 
+
+> **MAKE SURE TO CHANGE THIS LATER.**
 
 > `sed -i 's/SecRuleEngine DetectionOnly/SecRuleEngine On/' /etc/nginx/modsec/modsecurity.conf`
 
@@ -112,11 +121,12 @@ Now we need to add our rules to our main config file for ModSecurity in /etc/ngi
 > `# From https://github.com/SpiderLabs/ModSecurity/blob/master/`
 > <br> `# modsecurity.conf-recommended`
 > <br> `# Edit to set SecRuleEngine On`
+> <br>
 > <br> `Include "/etc/nginx/modsec/modsecurity.conf"`
 
 ### Part 1f – Add the Free OWASP CRS Rule Set to your ModSecurity Rules
 
-For this part we’re going to download the latest rule set from OWASP’s Github repo.
+For this part we’re going to download the latest rule set from OWASP’s official GitHub repo.
 
 > `wget https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/v3.0.2.tar.gz`
 > <br> `tar -xzvf v3.0.2.tar.gz`
@@ -163,11 +173,19 @@ Next, we’re going to edit our config file for ModSecurity in /etc/nginx/modsec
 
 ### Part 1g – Reload/Restart Nginx and Test our Configuration
 
-*Note: As a side note for the future, to do a quick test of Nginx configuration files to ensure they are all working properly with the correct syntax we can run a simple command to check that:*
+Now that we have that all taken care of, we'll need to reload, preferrably restart, Nginx to apply all the changes we make. 
+
+*Note: If you are running in a production environment you'll want to test your Nginx configuration files first before you reload/restart as if there is an error your Nginx will crash. This can be done by running the following command:*
 
 > `nginx -t`
 
-If all looks good, we are finally ready to reload/restart Nginx and test to make sure everything was setup properly. An easy way to do this can be done with the Nikto Scanning Tool. Running the following commands with download the tool and run a scan on localhost.
+If all looks good, we are finally ready to reload/restart Nginx. This can be done in many ways, I find the following easiest:
+
+> `sudo systemctl reload nginx`
+> <br> or
+> <br> `sudo systemctl restart nginx`
+
+Now, if you want to do some testing to see if your install of ModSecurity and OWASP rules are working correctly, and to assist in modifiying your rules sets, there is a helpful tool called Nikto. Running the following commands will download the tool and run a scan on your Nginx install via localhost.
 
 > `git clone https://github.com/sullo/nikto`
 > <br> `cd nikto`

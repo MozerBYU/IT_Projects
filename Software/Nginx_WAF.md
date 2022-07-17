@@ -185,7 +185,7 @@ If all looks good, we are finally ready to reload/restart Nginx. This can be don
 > <br> or
 > <br> `sudo systemctl restart nginx`
 
-Now, if you want to do some testing to see if your install of ModSecurity and OWASP rules are working correctly, and to assist in modifiying your rules sets, there is a helpful tool called Nikto. Running the following commands will download the tool and run a scan on your Nginx install via localhost.
+Now, if you want to do some testing to see if your install of ModSecurity and OWASP rules are working correctly, and to assist in modifying your rules sets, there is a helpful tool called Nikto. Running the following commands will download the tool and run a scan on your Nginx install via localhost.
 
 > `git clone https://github.com/sullo/nikto`
 > <br> `cd nikto`

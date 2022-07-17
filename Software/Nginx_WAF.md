@@ -173,7 +173,7 @@ Next, we’re going to edit our config file for ModSecurity in /etc/nginx/modsec
 
 ### Part 1g – Reload/Restart Nginx and Test our Configuration
 
-Now that we have that all taken care of, we'll need to reload, preferrably restart, Nginx to apply all the changes we make. 
+Now that we have that all taken care of, we'll need to reload, preferably restart, Nginx to apply all the changes we make. 
 
 *Note: If you are running in a production environment you'll want to test your Nginx configuration files first before you reload/restart as if there is an error your Nginx will crash. This can be done by running the following command:*
 

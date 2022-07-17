@@ -4,8 +4,7 @@ The following documentation will detail the various steps to setup a Nginx Web S
 
 *Note: All parts of this documentation will be done using Ubuntu 20.04. Adjust as needed according to your needs and system preferences.*
  
-## Part 1 – Setup Nginx with ModSecurity WAF
-### Part 1a – Download Nginx and Necessary Packages
+## Part 1 – Download Nginx
 
 First and foremost, don’t use the default apt repository provided by Ubuntu for Nginx, it is several versions behind the mainline and stable releases. Instead you can either:
 
@@ -55,7 +54,7 @@ Once that is all complete, we can finally proceed with installing Nginx using ap
 > `sudo apt update`
 > <br> `sudo apt install nginx-core`
 
-### Part 1b – Download ModSecurity 3.0 and Compile It
+## Part 2 – Download and Compile ModSecurity 3.0
 
 For this next section we’ll need to install some packages that are required for building and compiling ModSecurity.
 
@@ -78,7 +77,7 @@ After that we’ll change into our ModSecurity directory and compile the source 
 
 You may see a bunch of errors messages, don’t worry about it as long as the overall compilation succeeds. 
 
-### Part 1c – Download and Configure the Nginx Connector for ModSecurity
+## Part 3 – Download and Configure the Nginx Connector for ModSecurity
 
 For the next part we are going to download the connector of sorts that will be used by Nginx to connect the ModSecurity module.
 
@@ -92,13 +91,13 @@ Now we will be using that Nginx package we downloaded earlier. This next batch o
 > <br> `cp objs/ngx_http_modsecurity_module.so /etc/nginx/modules`
 > <br> `cd ..`
 
-### Part 1d – Load the Nginx ModSecurity Connector Module
+## Part 4 – Load the Nginx ModSecurity Connector Module
 
 Open the Nginx configuration file located in /etc/nginx/nginx.conf using your preferred text editor and add the following line, so that Nginx will properly load the ModSecurity module:
 
 > `load_module modules/ngx_http_modsecurity_module.so;`
 
-### Part 1e – Configure and Enable ModSecurity WAF
+## Part 5 – Configure and Enable ModSecurity WAF
 
 In this part we are going to create a new directory, *modsec*, within our default Nginx configuration directory for our ModSecurity configuration files. We will be using the recommended configuration directly from the creators of ModSecurity (SpiderLabs) as a starting point. Feel free to, and please do, adjust these according to your system needs and preferences.
 
@@ -124,7 +123,7 @@ Now we need to add our rules to our main config file for ModSecurity in /etc/ngi
 > <br>
 > <br> `Include "/etc/nginx/modsec/modsecurity.conf"`
 
-### Part 1f – Add the Free OWASP CRS Rule Set to your ModSecurity Rules
+## Part 6 – Add the OWASP CRS Rule Set to your ModSecurity Rules
 
 For this part we’re going to download the latest rule set from OWASP’s official GitHub repo.
 
@@ -171,7 +170,7 @@ Next, we’re going to edit our config file for ModSecurity in /etc/nginx/modsec
 > <br> `Include /usr/local/owasp-modsecurity-crs-3.0.2/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf`
 
 
-### Part 1g – Reload/Restart Nginx and Test our Configuration
+## Part 7 – Reload/Restart Nginx and Test It
 
 Now that we have that all taken care of, we'll need to reload, preferably restart, Nginx to apply all the changes we make. 
 

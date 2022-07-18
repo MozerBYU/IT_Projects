@@ -202,9 +202,12 @@ The following note applies if you chose option b in the beginning to update the 
 
 Update Apt for Official Nginx Repo
 -	http://nginx.org/en/linux_packages.html#Ubuntu
+
 ModSecurity WAF Setup 
 -	https://www.nginx.com/blog/compiling-and-installing-modsecurity-for-open-source-nginx
+
 OWASP CRS Rules
 -	https://docs.nginx.com/nginx-waf/admin-guide/nginx-plus-modsecurity-waf-owasp-crs/
+
 Rebuilding/Recompiling Nginx
 -	https://www.nginx.com/blog/failed-nginx-plus-upgrade-module-version-x-instead-of-y

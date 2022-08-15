@@ -15,7 +15,7 @@ To begin, we'll setup a fresh install of Ubuntu/Debian. Like with every new serv
 
 Next, we have some packages to install:
 
-> sudo apt install -y openjdk-#-jre screen ufw unattended-upgrades wget
+> sudo apt install -y git openjdk-#-jre screen ufw unattended-upgrades wget
 
 *Note: You'll need to replace <#> with the one appropriate to the version of Minecraft you'll be on.*
 
@@ -29,6 +29,7 @@ Next, we have some packages to install:
 *Note: You can run Minecraft 1.16 on Java 8, though it is recommended to run the latest verison of Java the Minecraft server supports. But anything past 1.17 you are **required** to run Java 17 or the server will crash.
 
 To explain each of the packages we are installing: 
+- Git: it a package for Git that I like for moving files around easily
 - Openjdk-#-jre: is the package for the Java software that runs the Minecraft server
 - Screen: is a package used by the screen software to run our Minecraft server as a background process.
 - UFW: is a package that is used by the UFW (uncomplicated firewall) that we'll use to lock down our Minecraft server ports
@@ -116,12 +117,23 @@ This can be done in many ways, but I will show you the way I like to use.
 
 What this is doing is creating a group for minecraft. Creating a system user (can't be logged into), but with the inital group of 'nobody'. We then change it's group to minecraft.
 
+## Import World if needed
 
+The cool thing about creating servers, is you can create a new fresh install (and even set the seed). Or you can use an existing World file. 
 
+Now if you are using a desktop gui version of Ubuntu/Debian, you'll have a much easier time. If you're like me and are using the server edition, the easiest method I have found for moving the file around in the commandline is by using Git. You can use a git server of your choice, even your own if you have one. In my case, I choose to use GIT LFS provided by Github.
 
+Note: I won't be covering how to use git in this tutorial.*
+
+Once you have your git repository created and the world file added to that repository, we're ready to clone it down. Which can be done by using git clone.
+
+> sudo git clone https://<git_server>/<user>/<repository_for_minecraft>
+  
+From there, just make sure that your world folder is in the right location in /var/minecraft.
 
 ## Set Filesystem Permissions
 
+Now a very important note. Most of the work we have been doing has either been as root or a sudo user. But our Minecraft server will be running as the minecraft user. So we need to change some permissions on /var/minecraft or it will break when you try to run it.
 
 
 ## Minecraft Security Log4j Warning
@@ -146,6 +158,15 @@ I will demonstrate where in the run file for the Minecraft server that you need 
 
 Make note about updating to new versions of Minecraft.
 
+  
+## Troubleshooting
+  
+Errors with starting the Minecraft server can be attributed to a simple subset of a few things:
+  
+- 1) You have the Minecraft service file looking for the wrong directory
+- 2) You have the wrong permissions set on /var/minecraft
+- 3) You have the wrong version of Java appropriate to your verison of Minecraft
+  
 ## Resources
 
 - https://www.minecraft.net/en-us/download/server

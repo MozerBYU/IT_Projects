@@ -1,5 +1,7 @@
-# Automated Minecraft Server Deployment in Ubuntu/Debian
+# Minecraft Java Server Deployment in Ubuntu/Debian
 ## Introduction
+
+![Minecraft Server Image](/assets/images/minecraft/minecraft-server.png)
 
 Nothing is sweeter than setting up your very own Minecraft Server for you, your family and friends to play on. But there can be a lot of hassle getting it all setup. That hassle is exasperated by attempting to automating the process. In this tutorial of sorts I will demonstrate all the steps of what to do to set it up, complete with automating security patches/updates, server startup/shutdown, and server backups. 
 
@@ -97,13 +99,15 @@ That will pull down the file that should be simliar to "server.jar".
 
 Now that we have our server jar file, we need to create a simple bash script that will run that jar and populate the initial server framework directory including the EULA.txt file that we'll edit.
 
-That script looks like the following (and is included in ![Files](/files/minecraft/minecraft-startup.sh) of this for reference).
+That script looks like the following below:
 
 > `java -Xmx1024M -Xms512M -jar server.jar -nogui`
 
-*Note: Don't worry about tweaking these values, as this is just to setup the framework of our Minecraft server. We'll tweak them later for the actual server.* 
+*Note: Don't worry about tweaking these values, as this is just to setup the framework of our Minecraft server. We'll tweak the actual memory values later for the server.* 
 
-You can create this file using nano, vim, or whatever text editor you prefer. Or you can simply download it from "files". 
+You can create this file using nano, vim, or whatever text editor you prefer. Or you can simply download it here:
+
+![Minecraft Startup Script](/assets/files/minecraft/minecraft-startup.sh)
 
 Next, we need to run that file to actual populate our framework:
 
@@ -123,7 +127,7 @@ This can be done in many ways, but I will show you the way I like to use.
 > <br> `sudo adduser minecraft --system`
 > <br> `sudo usermod -aG minecraft minecraft`
 
-What this is doing is creating a group for minecraft. Creating a system user (can't be logged into), but with the inital group of 'nobody'. We then change it's group to minecraft.
+What this is doing is creating a group for minecraft. Creating a system user (that can't be logged into), but with the inital group of 'nobody'. We then change it's group to minecraft. That way if something goes awry with your Minecraft server, it is more difficult to affect the rest of the system.
 
 ## Import World if needed
 
@@ -175,9 +179,9 @@ Suffice to say, it is a major problem and could allow **complete take over** of 
 
 Lucky for you, Minecraft has a released such mitigation. You can download those files directly from the link above, or I have them included in the files for this tutorial. 
 
-![Log4j v1.12 - v1.26 XML Files](/files/minecraft/log4j2_112-116.xml)
+![Log4j v1.12 - v1.26 XML Files](/assets/files/minecraft/log4j2_112-116.xml)
 
-![Log4j v1.7 - v1.11 XML Files](/files/minecraft/log4j2_17-111.xml)
+![Log4j v1.7 - v1.11 XML Files](/assets/files/minecraft/log4j2_17-111.xml)
 
 I will demonstrate where in the run file for the Minecraft server that you need to include that mitigation, per Minecraft's official instructions. Reference them as you wish.
   
@@ -199,9 +203,13 @@ https://minecraft.fandom.com/wiki/Tutorials/Server_startup_script
 
 I edited it for simplicities sake for single Minecraft server instance installs. I will include the original script in "files" if you wish to use the other, with some of my modifications necessary in order to make it actually run. Yes, you're welcome world. It took me a while to figure that out.
 
-![Simplified Minecraft Service File](/files/minecraft/minecraft.service)
+![Simplified Minecraft Service File](/assets/files/minecraft/minecraft.service)
 
-![Original-Edited Minecraft Service File](/files/minecraft/original-minecraft.service)
+![Original-Edited Minecraft Service File](/files/minecraft/minecraft-original.service)
+
+Now if you need the script with Log4j mitigation in place, that can be found here (adjust as needed for your version). Don't forget to also download the appropriate log4j migitigation configuration xml file.
+
+![Log4j Minecraft Service File](/files/minecraft/minecraft-log4j.service)
 
 ## Miscellanous History
 

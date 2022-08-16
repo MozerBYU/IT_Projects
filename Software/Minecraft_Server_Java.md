@@ -175,11 +175,11 @@ This is the link to the official article about it from Minecraft:
 
 https://help.minecraft.net/hc/en-us/articles/4416199399693-Security-Vulnerability-in-Minecraft-Java-Edition
 
-Suffice to say, it is a major problem and could allow **complete take over** of your Minecraft server, and the VM/container that is running it if you do not mitigate this vulnerability.
+Suffice to say, it is a major problem and could allow **complete take over** of your Minecraft server, and the VM/container/system that it is running on if you do not mitigate this vulnerability.
 
-Lucky for you, Minecraft has a released such mitigation. You can download those files directly from the link above, or I have them included in the files for this tutorial. 
+Lucky for you, Minecraft has released a mitigation for it. You can download those files directly from the link above, or I have them included in the files for this tutorial. 
 
-![Log4j v1.12 - v1.26 XML Files](/assets/files/minecraft/log4j2_112-116.xml)
+![Log4j v1.12 - v1.16 XML Files](/assets/files/minecraft/log4j2_112-116.xml)
 
 ![Log4j v1.7 - v1.11 XML Files](/assets/files/minecraft/log4j2_17-111.xml)
 
@@ -193,15 +193,19 @@ Here is the edited version with the Log4j mitigation in place:
 
 > `java -Xmx1024M -Xms512M -Dlo4j.configurationFile=log4j2_<version>.xml -jar server.jar -nogui`
 
+*Note: for the next section I have a file that has the mitigation included.*
+
 ## Server Automation using Systemd
 
-Now, we have everything in place. However, there is a bit of problem. Everytime your server/VM/container kicks off and has to restart, you would originally need to re-run that minecraft-startup.sh file. But that can get hectic if you don't have a VPN or other remote access option available. This my friend is where the beauty of service files comes in.
+Now, we have everything in place. However, there is a bit of problem. Everytime your server/VM/container kicks off and has to restart, you would originally need to re-run that minecraft-startup.sh file manually. But that can get hectic if you don't have a VPN or other remote access option available. This my friend is where the beauty of service files comes in.
+
+Service files allow you to designate a certain process or service to automatically run on startup of the system, as well as other features like auto-restarting and shutdown.
 
 The script I provide is a modified and simplified verison of the original script found here:
 
 https://minecraft.fandom.com/wiki/Tutorials/Server_startup_script
 
-I edited it for simplicities sake for single Minecraft server instance installs. I will include the original script in "files" if you wish to use the other, with some of my modifications necessary in order to make it actually run. Yes, you're welcome world. It took me a while to figure that out.
+I edited it for simplicities sake for single Minecraft server instance installs. I will include the original script down below if you wish to use the other, with some of my modifications necessary in order to make it actually run. Yes, you're welcome world. It took me a while to figure that out.
 
 ![Simplified Minecraft Service File](/assets/files/minecraft/minecraft.service)
 
@@ -215,34 +219,44 @@ Now if you need the script with Log4j mitigation in place, that can be found her
 
 **Skip if you don't care about the history of why I edited the public script.**
 
-History time, so I was in a spot where I was using tmux and manually going in everytime to start my Minecraft servers using `bash minecraft-startup.sh`. Note, I was running 5 Minecraft servers at that time, each with their own VM. So I had to repeat this process 5 times, everytime I had a server go down or had to run maintenance or cloud backups.
+History time, so back about 2 years ago (2021), I was in a spot where I was using tmux and manually going in everytime to start my Minecraft servers using `bash minecraft-startup.sh`. Note, I was running 5 Minecraft servers at that time, each with their own VM/container. So I had to repeat this process 5 times, everytime I had a server go down or had to run maintenance or cloud backups.
 
 As you can imagine this painstaking process was rather frustrating. So I did a good bit of research on StackOverFlow, Minecraft Fandom and r/Minecraft and r/FeedtheBeast (aka ModdedMinecraft). Which eventually led me to learn about Linux Service files as a means of automating running a service, or process, on system startup. 
 
-After some more digging I came across that articl I referenced above. I was so excited to copy it and get to work. However, soon thereafter I ran into some problems. This original script is for deploying several Minecraft servers to a given machine via minecraft-x.service. Which in my case, I have each Minecraft server on a seperate VM/container and so that didn't really matter to me. Additionally, there were some issues with how the script was setup where the server would die in a matter of seconds, but then endless attempt to restart itself to then die agian. This issue had the most ambiguous error messages (don't ask, it's been over a year and a half and I don't remember, nor care now). 
+After some more digging I came across that article I referenced above. I was so excited to copy it and get to work. However, soon thereafter I ran into some problems. This original script is for deploying several Minecraft servers to a given machine via minecraft-x@service. Which in my case didn't really apply, as I have each Minecraft server on a seperate VM/container. Additionally, there were some issues with how the script was setup where the server would die in a matter of seconds, but then endless attempt to restart itself to then die again. On top of that, the error/debug messages were so ambiguous (don't ask, it's been over a year and a half and I don't remember, nor care now). 
 
-Suffice to say, one error was related to the command "Type=forking". Which I modified to be "Type=simple". As I noted in my modification, the following StackOverFlow discussion has a fairly good explanation of the issue: 
+Suffice to say, one error was related to the instruction "Type=forking". Which after a lot of research, I modified to be "Type=simple". As I noted in my modification, the following StackOverFlow discussion has a fairly good explanation of the issue and what let me to change the original instruction: 
 
 https://askubuntu.com/questions/953920/systemctl-service-timed-out-during-start
 
 That modification solved the issue of the server dying at instant speed and endless trying to restart. But then I had another issue encountered in the "ExecStart" section of this beast:
 
-![Original ExecStart Script](/assets/minecraft/original-execstart-script.png)
+![Original ExecStart Script](/assets/images/minecraft/original-execstart-script.png)
 
 This had to be modified as well, by myself, so that screen was invoked by the process prior to invoking Java. Otherwise, screen was called after Java and it would crash the heck out of the server. Also, as I will get to later, none of the backups worked properly.
 
-![Modified ExecStart Script)(/assets/minecraft/modified-execstart-script.png)
+![Modified ExecStart Script](/assets/images/minecraft/modified-execstart-script.png)
 
 However, like I mentioned, I didn't need the functionality of create multiple Minecraft server instances on a given VM/container. So I stripped away that functionality for ease of reading and ease of use with the script for my own purposes. If you're setup is simliar to mine then you'll want the simplified script. If not, then feel free to use the modified version of the original script.
 
-Insert more history about how this tutorial came to be.
+![Simplified ExecStart Script](/assets/images/minecraft/simplified-execstart-script.png)
           
 ## Server Backups  
-You can rely on automated backups, which I'll demonstrate just below. Or you can do a manual one by doing the following:
+You can rely on automated backups, which I'll demonstrate just below thanks to the work of others I'll credit here in a bit. Or if you feel the painful option you can always do a manual one by doing the following:
   
 > `cp /var/minecraft/world /var/minecraft/world.backup`
 
-Insert more about automated backups.
+There are many ways to do backups of your Minecraft server. Various plugins exist just for the purpose. And many scripts have been created for such a purpose. The issue that arises with doing **live** backups of your Minecraft server, is active writes to the server. Say you have 5 players that are on all building something while the backup takes place, the backup could be inconsistent, it could endup being corrupted, or it could turn out fine. It's hard to tell what will be the result. 
+
+But it is better to be safe than sorry. The script provided by Nicholas Chan on GitHub (https://github.com/nicolaschan/minecraft-backup) has proven to be very helpful in properly backing up Minecraft servers. The way it works it is connects to the actual console of the Minecraft server (via screen, tmux or similar) and then issues a `/save-off` command to tell the server to stop any writes. After the backup has completed it will issue a `/save-on` command to the server to resume any writes, and save any pending writes that occurred during the backup.
+
+Feel free to use whatever backup method suits you best. I will demonstrate how to use the script referenced above.
+
+To begin head over and download the script to whichever directory suits you best (i.e. /var/scripts/). Next, you'll want to ensure that the script is executable by running the following command:
+
+> `sudo chmod u+x /var/script/backup.sh`
+
+Finish
 
 ## Additional Notes
 

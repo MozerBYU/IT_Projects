@@ -1,19 +1,21 @@
 # Automated Minecraft Server Deployment in Ubuntu/Debian
 ## Introduction
 
-Nothing is sweeter than setting up you're very own Minecraft Server for you and your family and friends to play on. But there can be a lot of hassle getting it all setup. Especially in automating the process. In this I will demonstrate all the steps of what to do to set it up. Eventually I will have a script that will do all the install for you, but that is still in the works.
+Nothing is sweeter than setting up your very own Minecraft Server for you, your family and friends to play on. But there can be a lot of hassle getting it all setup. That hassle is exasperated by attempting to automating the process. In this tutorial of sorts I will demonstrate all the steps of what to do to set it up, complete with automating security patches/updates, server startup/shutdown, and server backups. 
+
+Eventually I will have a script that will do all the install for you, but that is still in the works.
 
 *Note: This is strictly for Minecraft Java Version. Bedrock is coming later. Stay tuned.*
 
-*Note: All of the following steps will be done on a Ubuntu 22.04 LTS, but this can be replicated as far back as Ubuntu 18.04 LTS and Debian 8.*
+*Note: All of the following steps will be done on Ubuntu Server 22.04 LTS , but this can be replicated as far back as Ubuntu 18.04 LTS and Debian 8. It can also be done with the Desktop versions of either Ubuntu or Debian.*
 
 ## Part 1 – Package Installation and Security Updates
 
-To begin, we'll setup a fresh install of Ubuntu/Debian. Like with every new server install, make sure you have the latest package and security updates.
+To begin, we'll setup a fresh install of Ubuntu/Debian. Like with every new server install, make sure you have the latest package and security updates. Ubuntu and Debian use the apt package manager for all of their package repositories. The follow command will update the apt repositories and then search for upgrades for the packages on your system as well as security upgrades/patches for your Operating System.
 
 > `sudo apt update && sudo apt upgrade -y`
 
-Next, we have some packages to install:
+Next, we have some additional packages to install that I will explain in a bit:
 
 > `sudo apt install -y openjdk-#-jre screen ufw unattended-upgrades wget`
 
@@ -30,25 +32,25 @@ Next, we have some packages to install:
 | 1.14 - 1.16 | Java 11 | 
 | 1.17 - 1.19 | Java 17 |
 
-*Note: You can run Minecraft 1.16 on Java 8, though it is recommended to run the latest verison of Java the Minecraft server supports. But anything past 1.17 you are **required** to run Java 17 or the server will crash.
+*Note: You can run Minecraft 1.16 on Java 8, though it is recommended to run the latest verison of Java the Minecraft server supports. However, anything past 1.11 you are **required** to run Java 8, and anything past 1.16 you are **required** to run Java 17 or the server will crash.*
 
 To explain each of the packages we are installing: 
-- Git: is a package for Git that I like for moving files around easily
-- Openjdk-#-jre: is the package for the Java software that runs the Minecraft server
+- Git: is a package for Git that I like for moving files around easily in the commandline
+- Openjdk-#-jre: is the package for the Java JDK software that runs the Minecraft server
 - Screen: is a package used by the screen software to run our Minecraft server as a background process.
-- UFW: is a package that is used by the UFW (uncomplicated firewall) that we'll use to lock down our Minecraft server ports
-- Unattended-upgrades: is the package used for automating security update installation to keep our Minecraft server secure
-- Wget: is a package used to download the minecraft server jar files that we'll need
+- UFW: is a package that is used by UFW (uncomplicated firewall) that we'll use to lock down our Minecraft server ports except for those we need
+- Unattended-upgrades: is the package used for automating security update/patch installation to keep our Minecraft server secure
+- Wget: is a package used to download the Minecraft server jar files that we'll need
 
-*Note: You don't have to use screen, you can also use tmux or similar. But screen is the one chosen in this tutorial and in the script file that you will download*
+*Note: You don't have to use screen, you can also use tmux or similar. But screen is the one chosen in this tutorial and in the script file that you will download later.*
 
 ## Setup Firewall Rules
 
-In order for your Minecraft server to accessible to greater internet, you'll need to setup Port Forwarding or similar. We will not demonstrate how that is done. But look up articles on Reddit, Facebook, Stackoverflow or you're respective router's company website to find information on how to do so.
+In order for your Minecraft server to accessible to greater internet, you'll need to setup Port Forwarding or similar. We will not demonstrate how that is done in this tutorial. If you need help in this area, feel free to look up articles on Reddit, Facebook, StackOverFlow or even your respective router's website to find information on how to do so. If you are still stuck, shoot me a message on Reddit at u/MozerBYU and I'll help you as I have time available.
 
-Suffice to say, you need to designate a port on your router that is open to the internet that you will use to connect to your Minecraft server. By default, that port is 25565 running on the TCP protocol. Now you can choose to keep this default port, or you can change it. It's up to you. All that it changes is how your Minecraft client connects to the server.
+Suffice to say, you need to designate a port on your router that is open to the internet that you will use to connect to your Minecraft server, and then forward that port to an internal port on your server/computer/VM/container/whatever that is hosting your Minecraft server. This will require you to setup a static IPv4 address on said whatver. By default, that port is 25565 running on the TCP protocol. Now you can choose to keep this default port, or you can change it. It's up to you. All that it changes is how your Minecraft client connects to the server.
 
-For ease of explaining this process, we will use the default 25565/tcp port for our use case. So we'll need to add that to our firewall rules using UFW.
+For ease of explaining this process, we will use the default 25565/tcp port for our use case. So we'll need to add that to our firewall rules of our server hosting our Minecraft server using UFW. Like is said in the name, UFW is designed to uncomplicate the firewalling process as much as possible. If you want to use IPtables or similar, go for it. However, for simplicity, we're going to stick with UFW in this tutorial. The follow command will tell UFW to allow our Minecraft server to be open to inbound connections.
 
 > `sudo ufw allow 25565/tcp`
 

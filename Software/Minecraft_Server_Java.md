@@ -83,7 +83,7 @@ https://mcversions.net/
 Now, before we actually download the jar file, we need to make a new directory for our Minecraft server files to live in. I like using the /var directory, but it really doesn't matter where you put it as long as you secure it down.
 
 > `sudo mkdir /var/minecraft`
-> `<br> cd /var/minecraft`
+> <br> `cd /var/minecraft`
 
 Next, we'll use wget to get our Minecraft server jar file.
 
@@ -129,7 +129,9 @@ What this is doing is creating a group for minecraft. Creating a system user (ca
 
 The cool thing about creating servers, is you can create a new fresh install (and even set the seed). Or you can use existing "world" files. 
 
-Now if you are using a desktop gui version of Ubuntu/Debian, you'll have a much easier time. If you're like me and are using the server edition, the easiest method I have found for moving the file around in the commandline is by using Git. You can use a Git server of your choice, even your own if you have one. In my case, I choose to use Git LFS provided by Github, as it is specifically designed for large files
+If you do choose a new world, you set the world seed in the "server.properties" file.
+
+As far transferring existing world files, your method will depend on what version of Ubuntu/Debian you're running (whether or not it has a GUI or not). If you do have a GUI, then you can simply use Google Drive, Dropbox or the equivalent. If you're like me and are using the server edition, the easiest method I have found for moving the file around in the commandline is by using Git. You can use a Git server of your choice, even your own if you have one. In my case, I choose to use Git LFS provided by Github, as it is specifically designed for large files and some of my Minecraft world files are quite large.
 
 **If you opt to not use git, you can ignore this whole section.**
 

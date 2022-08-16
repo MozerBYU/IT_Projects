@@ -1,0 +1,96 @@
+[Unit]
+Description=Minecraft Server %i
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/minecraft/%i
+
+# Solves the issue where the minecraft server will endlessly restart itself
+# See https://askubuntu.com/questions/953920/systemctl-service-timed-out-during-start for more info
+Type=simple
+
+PrivateUsers=true
+# Users Database is not available from within the unit, only root and minecraft is available, everybody else is nobody
+
+User=minecraft
+Group=minecraft
+
+ProtectSystem=full
+# Read only mapping of /usr /boot and /etc
+
+ProtectHome=true
+# /home, /root and /run/user seem to be empty from within the unit. It is recommended to enable this setting for all long-running services (in particular network-facing ones).
+
+ProtectKernelTunables=true
+# /proc/sys, /sys, /proc/sysrq-trigger, /proc/latency_stats, /proc/acpi, /proc/timer_stats, /proc/fs and /proc/irq will be read-only within the unit. It is recommended to turn this on for most services.
+# Implies MountFlags=slave
+
+ProtectKernelModules=true
+# Block module system calls, also /usr/lib/modules. It is recommended to turn this on for most services that do not need special file systems or extra kernel modules to work
+# Implies NoNewPrivileges=yes
+
+ProtectControlGroups=true
+# It is hence recommended to turn this on for most services.
+# Implies MountAPIVFS=yes
+
+# Set default memory values
+Environment="MCMINMEM=512M" "MCMAXMEM=1024M" "SHUTDOWN_DELAY=5" "POST_SHUTDOWN_DELAY=10"
+# Change memory values in environment file
+EnvironmentFile=-/opt/minecraft/%i/server.conf
+
+# Uncomment this to fix screen on RHEL 8
+#ExecStartPre=+/bin/sh -c 'chmod 777 /run/screen'
+
+ExecStartPre=/bin/sh -c \
+    'find -L . \
+      -maxdepth 1 \
+      -type f \
+      -iregex ".*/\\(FTBServer\\|craftbukkit\\|spigot\\|paper\\|forge\\|minecraft_server\\).*jar" \
+      -print0 \
+      -quit \
+    | xargs -0 -I{} \
+      /usr/bin/screen -DmS mc-%i'
+ExecStart=/bin/sh -c \
+    '/usr/bin/java \
+          -server \
+          -Xms${MCMINMEM} \
+          -Xmx${MCMAXMEM} \
+          -XX:+UseG1GC \
+          -XX:ParallelGCThreads=2 \
+          -XX:MinHeapFreeRatio=5 \
+          -XX:MaxHeapFreeRatio=10 \
+          -jar {} \ # insert server jar name. i.e. 'server.jar'
+          --nogui' 
+
+ExecReload=/usr/bin/screen -p 0 -S mc-%i -X eval 'stuff "reload"\\015'
+
+ExecStop=/usr/bin/screen -p 0 -S mc-%i -X eval 'stuff "say SERVER SHUTTING DOWN. Saving map..."\\015'
+ExecStop=/bin/sh -c '/bin/sleep ${SHUTDOWN_DELAY}'
+ExecStop=/usr/bin/screen -p 0 -S mc-%i -X eval 'stuff "save-all"\\015'
+ExecStop=/usr/bin/screen -p 0 -S mc-%i -X eval 'stuff "stop"\\015'
+ExecStop=/bin/sh -c '/bin/sleep ${POST_SHUTDOWN_DELAY}'
+
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
+
+#########
+# HowTo
+#########
+#
+# Create a directory in /opt/minecraft/XX where XX is a name like 'survival'
+# Add minecraft_server.jar into dir with other conf files for minecraft server
+#
+# Enable/Start systemd service
+#    systemctl enable minecraft@survival
+#    systemctl start minecraft@survival
+#
+# To run multiple servers simply create a new dir structure and enable/start it
+#    systemctl enable minecraft@creative
+# systemctl start minecraft@creative
+#
+# To change specific server memory assignment, create file /opt/minecraft/XX/server.conf (where XX is your server name) and add below lines:
+# MCMINMEM=512M
+# MCMAXMEM=2048M

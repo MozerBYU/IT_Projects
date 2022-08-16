@@ -1,4 +1,4 @@
-# Automated Minecraft Server Deployment in Linux
+# Automated Minecraft Server Deployment in Ubuntu/Debian
 ## Introduction
 
 Nothing is sweeter than setting up you're very own Minecraft Server for you and your family and friends to play on. But there can be a lot of hassle getting it all setup. Especially in automating the process. In this I will demonstrate all the steps of what to do to set it up. Eventually I will have a script that will do all the install for you, but that is still in the works.

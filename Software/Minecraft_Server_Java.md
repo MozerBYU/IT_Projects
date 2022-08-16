@@ -256,7 +256,28 @@ To begin head over and download the script to whichever directory suits you best
 
 > `sudo chmod u+x /var/script/backup.sh`
 
-Finish
+Once you ahve the script download and the permissions set open a program called 'crontab' by running the following:
+
+> `crontab -e`
+
+From here you can edit the file with whatever text editor you prefer. Basically at the end of the file you need to add the schedule of when you want cron to run a job to execute our backup script for the Minecraft server. 
+
+The format for cron is the following: 
+
+| Minute | Hour | Day (month) | Month | Day (week) |
+| :------: | :------: | :------: | :------: | :-------: |
+
+If you need help figuring out to set it up, we found this helpful tool online to assist you:
+
+https://crontab.guru/
+
+For my setup, I have crontab run the backups every day at 1:00am. So mine looks like the following:
+
+> 0 1 * * * /var/scripts/backup.sh -c -i /var/minecraft/world -o /var/minecraft-backups -s MC
+
+To explain what is happening above. We tell cron when to run the script we are calling, backup.sh in this case. We give it an input directory (the world directory for our Minecraft server) and and output directory (for the backups) and then tell it to use screen using -s and what 'screen' to look for. In the Minecraft Service file, we designate that screen as MC.
+
+*Note: If you change that screen name from MC to anything else in that service file you will need to change it here as well, or it won't work.*
 
 ## Additional Notes
 

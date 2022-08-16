@@ -72,7 +72,7 @@ Next, you'll need to head over to Minecraft's official site for the download lin
 
 https://www.minecraft.net/en-us/download/server
 
-This is the download link for 1.19.2:
+This is the download link for 1.19.2 (latest as of 8/15/22):
 
 https://piston-data.mojang.com/v1/objects/f69c284232d7c7580bd89a5a4931c3581eae1378/server.jar
 
@@ -80,7 +80,7 @@ If you aren't able to find the version you want, they are also archived at this 
 
 https://mcversions.net/
 
-Now, before we actually download it we need to make a new directory for our Minecraft server files to live in. I like using the /var directory, but it really doesn't matter where you put it as long as you secure it down.
+Now, before we actually download the jar file, we need to make a new directory for our Minecraft server files to live in. I like using the /var directory, but it really doesn't matter where you put it as long as you secure it down.
 
 > `sudo mkdir /var/minecraft`
 > `<br> cd /var/minecraft`
@@ -91,11 +91,11 @@ Next, we'll use wget to get our Minecraft server jar file.
 
 That will pull down the file that should be simliar to "server.jar". 
 
-*Note: The name of the Minecraft server jar file doesn't make a big difference, as long as you change the name of the jar file that the startup file we'll download in a second is looking for. They need to match or the server will fail.*
+*Note: The Minecraft server jar filename doesn't make a big difference, as long as you change the name of the jar file that the startup file we'll download in a second is looking for. They need to match or the server will fail.*
 
-## Build Server Framework 
+## Create Initial Server Framework 
 
-Now that we have our server jar file, we need to create a simple bash script that will run that jar and populate the server framework directory including the EULA.txt file that we'll edit.
+Now that we have our server jar file, we need to create a simple bash script that will run that jar and populate the initial server framework directory including the EULA.txt file that we'll edit.
 
 That script looks like the following (and is included in ![Files](/files/minecraft/minecraft-startup.sh) of this for reference).
 

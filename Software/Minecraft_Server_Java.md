@@ -1,4 +1,4 @@
-# Minecraft Java Server Deployment in Ubuntu/Debian
+# Tutorial: Setup Minecraft Java Server in Ubuntu/Debian
 ## Introduction
 
 ![Minecraft Server Image](/Software/assets/images/minecraft/minecraft-server.png)

@@ -219,6 +219,34 @@ Don't forget to edit the -Xmx and -Xms values to the desired levels for your ser
 
 *Note: Yes, these scripts work with Bukkit and Paper. I am running 5 Paper Minecraft servers right now using this exact script. I just went and edited the section that has the -jar to be appropriate to name of the jar file for your Paper server.*
 
+Once you have the script downloaded, make sure to title it minecraft.service and put it in the /etc/systemd/system directory so that it can be found by systemd. You can do that by using the following command:
+
+> `sudo mv minecraft-<whatever>.service /etc/systemd/system/minecraft.service`
+
+Now to test and make sure everything is working to this point:
+
+> `sudo systemctl start minecraft`
+
+Followed by:
+
+> `sudo systemctl status minecraft`
+
+or
+
+> `sudo service minecraft start`
+
+Followed by:
+
+> `sudo service minecraft status`
+
+If you see that the world has finished creating/processed and there are no errors then we are good to enable our Minecraft Service file using either of the following commands:
+
+> `sudo systemctl enable minecraft`
+
+or 
+
+> `sudo service minecraft enable`
+
 ## Miscellanous History
 
 **Skip if you don't care about the history of why I edited the public script.**

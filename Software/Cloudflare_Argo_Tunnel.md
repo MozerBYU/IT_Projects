@@ -1,4 +1,4 @@
-# Cloudflare Argo Tunnel
+# Tutorial: Setup Cloudflare Argo Tunnel in Ubuntu/Debian
 ## Introduction
 
 Cloudflare Argo Tunnel is a very unique software that allows you to setup a secure tunnel between your server and Cloudflare that you can send internet traffic down without exposing your local IP address or any ports. It is very robust with lots of features to suit many needs and configurations.

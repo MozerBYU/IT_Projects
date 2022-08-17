@@ -107,7 +107,7 @@ That script looks like the following below:
 
 You can create this file using nano, vim, or whatever text editor you prefer. Or you can simply download it here:
 
-![Minecraft Startup Script](/Software/assets/files/minecraft/minecraft-startup.sh)
+![Minecraft Startup Script](/Software/assets/files/minecraft/java/minecraft-startup.sh)
 
 Next, we need to run that file to actual populate our framework:
 
@@ -179,9 +179,9 @@ Suffice to say, it is a major problem and could allow **complete take over** of 
 
 Lucky for you, Minecraft has released a mitigation for it. You can download those files directly from the link above, or I have them included in the files for this tutorial. 
 
-![Log4j v1.12 - v1.16 XML File](/Software/assets/files/minecraft/log4j2_112-116.xml)
+![Log4j v1.12 - v1.16 XML File](/Software/assets/files/minecraft/java/log4j2_112-116.xml)
 
-![Log4j v1.7 - v1.11 XML File](/Software/assets/files/minecraft/log4j2_17-111.xml)
+![Log4j v1.7 - v1.11 XML File](/Software/assets/files/minecraft/java/log4j2_17-111.xml)
 
 I will demonstrate where in the run file for the Minecraft server that you need to include that mitigation, per Minecraft's official instructions. Reference them as you wish.
   
@@ -207,13 +207,13 @@ https://minecraft.fandom.com/wiki/Tutorials/Server_startup_script
 
 I edited it for simplicities sake for single Minecraft server instance installs. I will include the original script down below if you wish to use the other, with some of my modifications necessary in order to make it actually run. Yes, you're welcome world. It took me a while to figure that out.
 
-![Simplified Minecraft Service File](/Software/assets/files/minecraft/minecraft.service)
+![Simplified Minecraft Service File](/Software/assets/files/minecraft/java/minecraft.service)
 
-![Original-Edited Minecraft Service File](/Software/assets/files/minecraft/minecraft-original.service)
+![Original-Edited Minecraft Service File](/Software/assets/files/minecraft/java/minecraft-original.service)
 
 Now if you need the script with Log4j mitigation in place, that can be found here (adjust as needed for your version). Don't forget to also download the appropriate log4j migitigation configuration xml file.
 
-![Log4j Minecraft Service File](/Software/assets/files/minecraft/minecraft-log4j.service)
+![Log4j Minecraft Service File](/Software/assets/files/minecraft/java/minecraft-log4j.service)
 
 Don't forget to edit the -Xmx and -Xms values to the desired levels for your server. I will say, 512M is the minimum amount of memory you should allocate for -Xms. Anything lower, and Java will complain a shiz ton to you about not having enough memory. In my personal experience, Minecraft server versions >= 1.18 need a minimum of 2.5GB or 2560M for -Xmx in order to run correctly.
 

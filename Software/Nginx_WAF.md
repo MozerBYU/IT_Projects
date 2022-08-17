@@ -1,8 +1,8 @@
-# NGINX WAF Installation Tutorial
+# Tutorial: Setup Nginx Web Application Firewall on Ubuntu/Debian
 ## Introduction
 The following documentation will detail the various steps to setup a Nginx Web Server, complete with a Web Application Firewall (WAF) using ModSecurity and the OWASP CRS Rule Sets. All of which is compiled documentation from nginx.org official documentation in an easier more concise format. Links to the official documentation can be found in "Resources" at the bottom.
 
-*Note: All parts of this documentation will be done using Ubuntu 20.04. Adjust as needed according to your needs and system preferences.*
+*Note: All parts of this documentation will be done using Ubuntu 22.04 LTS. Adjust as needed according to your needs and system preferences.*
  
 ## Part 1 – Download Nginx
 

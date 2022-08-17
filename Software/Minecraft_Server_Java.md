@@ -1,7 +1,7 @@
 # Minecraft Java Server Deployment in Ubuntu/Debian
 ## Introduction
 
-![Minecraft Server Image](/assets/images/minecraft/minecraft-server.png)
+![Minecraft Server Image](/Software/assets/images/minecraft/minecraft-server.png)
 
 Nothing is sweeter than setting up your very own Minecraft Server for you, your family and friends to play on. But there can be a lot of hassle getting it all setup. That hassle is exasperated by attempting to automating the process. In this tutorial of sorts I will demonstrate all the steps of what to do to set it up, complete with automating security patches/updates, server startup/shutdown, and server backups. 
 
@@ -107,7 +107,7 @@ That script looks like the following below:
 
 You can create this file using nano, vim, or whatever text editor you prefer. Or you can simply download it here:
 
-![Minecraft Startup Script](/assets/files/minecraft/minecraft-startup.sh)
+![Minecraft Startup Script](/Software/assets/files/minecraft/minecraft-startup.sh)
 
 Next, we need to run that file to actual populate our framework:
 
@@ -179,9 +179,9 @@ Suffice to say, it is a major problem and could allow **complete take over** of 
 
 Lucky for you, Minecraft has released a mitigation for it. You can download those files directly from the link above, or I have them included in the files for this tutorial. 
 
-![Log4j v1.12 - v1.16 XML Files](/assets/files/minecraft/log4j2_112-116.xml)
+![Log4j v1.12 - v1.16 XML Files](/Software/assets/files/minecraft/log4j2_112-116.xml)
 
-![Log4j v1.7 - v1.11 XML Files](/assets/files/minecraft/log4j2_17-111.xml)
+![Log4j v1.7 - v1.11 XML Files](/Software/assets/files/minecraft/log4j2_17-111.xml)
 
 I will demonstrate where in the run file for the Minecraft server that you need to include that mitigation, per Minecraft's official instructions. Reference them as you wish.
   
@@ -207,13 +207,13 @@ https://minecraft.fandom.com/wiki/Tutorials/Server_startup_script
 
 I edited it for simplicities sake for single Minecraft server instance installs. I will include the original script down below if you wish to use the other, with some of my modifications necessary in order to make it actually run. Yes, you're welcome world. It took me a while to figure that out.
 
-![Simplified Minecraft Service File](/assets/files/minecraft/minecraft.service)
+![Simplified Minecraft Service File](/Software/assets/files/minecraft/minecraft.service)
 
-![Original-Edited Minecraft Service File](/files/minecraft/minecraft-original.service)
+![Original-Edited Minecraft Service File](/Software/assets/files/minecraft/minecraft-original.service)
 
 Now if you need the script with Log4j mitigation in place, that can be found here (adjust as needed for your version). Don't forget to also download the appropriate log4j migitigation configuration xml file.
 
-![Log4j Minecraft Service File](/files/minecraft/minecraft-log4j.service)
+![Log4j Minecraft Service File](/Software/assets/files/minecraft/minecraft-log4j.service)
 
 ## Miscellanous History
 
@@ -231,15 +231,15 @@ https://askubuntu.com/questions/953920/systemctl-service-timed-out-during-start
 
 That modification solved the issue of the server dying at instant speed and endless trying to restart. But then I had another issue encountered in the "ExecStart" section of this beast:
 
-![Original ExecStart Script](/assets/images/minecraft/original-execstart-script.png)
+![Original ExecStart Script](/Software/assets/images/minecraft/original-execstart-script.png)
 
 This had to be modified as well, by myself, so that screen was invoked by the process prior to invoking Java. Otherwise, screen was called after Java and it would crash the heck out of the server. Also, as I will get to later, none of the backups worked properly.
 
-![Modified ExecStart Script](/assets/images/minecraft/modified-execstart-script.png)
+![Modified ExecStart Script](/Software/assets/images/minecraft/modified-execstart-script.png)
 
 However, like I mentioned, I didn't need the functionality of create multiple Minecraft server instances on a given VM/container. So I stripped away that functionality for ease of reading and ease of use with the script for my own purposes. If you're setup is simliar to mine then you'll want the simplified script. If not, then feel free to use the modified version of the original script.
 
-![Simplified ExecStart Script](/assets/images/minecraft/simplified-execstart-script.png)
+![Simplified ExecStart Script](/Software/assets/images/minecraft/simplified-execstart-script.png)
           
 ## Server Backups  
 You can rely on automated backups, which I'll demonstrate just below thanks to the work of others I'll credit here in a bit. Or if you feel the painful option you can always do a manual one by doing the following:

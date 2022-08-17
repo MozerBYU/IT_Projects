@@ -215,6 +215,10 @@ Now if you need the script with Log4j mitigation in place, that can be found her
 
 ![Log4j Minecraft Service File](/Software/assets/files/minecraft/minecraft-log4j.service)
 
+Don't forget to edit the -Xmx and -Xms values to the desired levels for your server. I will say, 512M is the minimum amount of memory you should allocate for -Xms. Anything lower, and Java will complain a shiz ton to you about not having enough memory. In my personal experience, Minecraft server versions >= 1.18 need a minimum of 2.5GB or 2560M for -Xmx in order to run correctly.
+
+*Note: Yes, these scripts work with Bukkit and Paper. I am running 5 Paper Minecraft servers right now using this exact script. I just went and edited the section that has the -jar to be appropriate to name of the jar file for your Paper server.*
+
 ## Miscellanous History
 
 **Skip if you don't care about the history of why I edited the public script.**
@@ -279,6 +283,10 @@ To explain what is happening above. We tell cron when to run the script we are c
 
 *Note: If you change that screen name from MC to anything else in that service file you will need to change it here as well, or it won't work.*
 
+One last thing I will mention about backups. Make sure you save them somewhere (cloud, external hdd, flashdrive, whatever) other than you system. Yes, still have backups on the system itself. But in case that system completely dies, you'll want offshore backups. Trust me. It has saved a server world of mine a time or two. Like I said earlier, GitHub has been super helpful in that area, as I use it for monthly backups and other major backups as necessary (like after a large creative world build).
+
+Good luck and let me know if you have any questions or comments! I'll update this again when I get the automated deployment script created.
+
 ## Additional Notes
 
 ### Server Updating
@@ -291,7 +299,10 @@ Errors with starting the Minecraft server can be attributed to a simple subset o
   
 - 1) You have the Minecraft service file looking for the wrong directory
 - 2) You have the wrong permissions set on /var/minecraft
-- 3) You have the wrong version of Java appropriate to your verison of Minecraft
+- 3) You forgot to create the user and group for minecraft
+- 4) You have the wrong version of Java appropriate to your verison of Minecraft
+
+Checking these should allievate most errors you encounter in new Minecraft server setups. Feel free to ping me at r/MozerBYU if you have unique issues or you get stuck banging your head against a wall after several hours of troubleshooting and researching.
   
 ## Resources
 

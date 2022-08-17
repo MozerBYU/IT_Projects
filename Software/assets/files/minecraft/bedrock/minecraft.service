@@ -19,8 +19,11 @@ ProtectControlGroups=true
 InaccessibleDirectories=/root /sys /srv /media /mnt
 ReadWriteDirectories=/var/minecraft /usr/bin/screen /var/log/minecraft
 
+StandardOutput=/var/log/minecraft
+StandardError=/var/log/minecraft
+
 ExecStartPre=/bin/sh -c '/usr/bin/screen -dmS MC'
-ExecStart=/bin/sh -c '/var/minecraft/bedrock_server'
+ExecStart=/var/minecraft/bedrock_server
 
 ExecReload=/usr/bin/screen -p 0 -S MC -X eval 'stuff "reload"\\015'
 

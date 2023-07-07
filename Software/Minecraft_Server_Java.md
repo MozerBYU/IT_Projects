@@ -32,7 +32,7 @@ Next, we have some additional packages to install that I will explain in a bit:
 | <= 1.11 | Java 7 | 
 | 1.12 - 1.13 | Java 8 |
 | 1.14 - 1.16 | Java 11 | 
-| 1.17 - 1.19 | Java 17 |
+| 1.17 - 1.20 | Java 17 |
 
 *Note: You can run Minecraft 1.16 on Java 8, though it is recommended to run the latest verison of Java the Minecraft server supports. However, anything past 1.11 you are **required** to run Java 8, and anything past 1.16 you are **required** to run Java 17 or the server will crash.*
 

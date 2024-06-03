@@ -1,0 +1,70 @@
+- Initial Install via USB
+  - Storage Settings (for ZFS Pool)
+    - Swap - 0
+    - Root - 465
+    - Minfree - 0
+    - Maxvz - 0
+  - Storage Settings (for local install)
+    - Swap - 0
+    - Root - <disk size>
+    - Minfree - 0
+    - Maxvz - 0
+  - Locale Settings
+    - United States
+    - America/Denver
+  - IP Settings
+    - <node>.<domain.tld>
+    - IP - 10.x.x.x
+    - Gateway - 10.x.x.x
+    - DNS - 1.1.1.1 (default upstream to Cloudflare DNS)
+
+
+- Post Install 
+  - Resize Partitions
+    - lvresize -l +100%FREE /dev/pve/root
+    - resize2fs /dev/mapper/pve-root
+    - df -h # check that changes applied -> make sure /dev/mapper/pve-root shows the correct size
+  - Fix Apt Repositories
+    - cd /etc/apt/sources.list.d
+    - nano ceph -> add # in front
+    - nano pve-enterprise.list -> add # in front
+    - cd /etc/apt/
+    - nano sources.list -> add 'deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription'
+  - Update Repositories and Apply Updates
+    - apt update && apt upgrade -y
+  - Install Packages
+    - apt install unattended-upgrades -y
+    - apt install ufw -y
+    - apt install fail2ban - y
+    - apt install openvswitch-switch -y
+    - apt install ntfs-3g -y
+    - apt install grub-efi-amd64 -y (mini pcs)
+  - Restore Network Configuration
+    - See file
+    - systemctl restart networking (wait about 15-30 secs for configuration to reload)
+  - Configure Firewall
+    - ufw allow 8006/tcp comment 'for webgui'
+    - ufw allow 22/tcp comment 'for ssh'
+    - ufw enable
+  - Configure ZFS Pool
+    - Create ZFS Pool with Single Disk, ashift=12, compression=on
+    - zpool import -f ZFS_Pool (for import)
+  - Join Cluster
+  - Configure ACME Certs for TLS
+    - Create ACME Account
+    - Setup Cloudflare DNS Plugin
+    - Add server to ACME Account
+    - Order Certs
+
+** Once all cluster nodes are added **
+  - Setup MFA for Login -> Duo or Microsoft Auth
+  - Import Backups
+    - mkdir /mnt/backup_drive
+    - fdisk -l # to find external drive
+    - mount -t ntfs-3g /dev/sdx1 /mnt/backup_drive
+    - cp * /mnt/backup_drive/folder_to_backups/ /var/lib/vz/dump
+  - Upload ISOs
+    - Windows22H2.iso
+    - ubuntu-server-22.04-LTS
+    - ubuntu-server-24.04-LTS
+  - Restore VMs/CTs from Backup from /var/lib/vz/dump

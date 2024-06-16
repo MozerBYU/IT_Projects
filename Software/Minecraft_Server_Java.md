@@ -183,6 +183,8 @@ Lucky for you, Minecraft has released a mitigation for it. You can download thos
 
 ![Log4j v1.7 - v1.11 XML File](/Software/assets/files/minecraft/java/log4j2_17-111.xml)
 
+> Note: make sure you put this file in with your normal minecraft server files, otherwise it won't work.
+
 I will demonstrate where in the run file for the Minecraft server that you need to include that mitigation, per Minecraft's official instructions. Reference them as you wish.
   
 Below is our original run script for the Minecraft Server:
